@@ -1,0 +1,24 @@
+.footer{
+    padding: calc($separacion / 2) 0;
+    background-color: $grisOscuro;
+    margin-bottom: 0;
+   
+
+    .contenedor-footer{
+        padding-top: calc($separacion / 2);
+    }
+
+    .copy-right{
+       color: $blanco;
+       text-align: center; 
+    }
+
+    .mostrar-nosotros{
+        display: flex;
+        flex-direction: column;
+
+        @include tablet{
+            flex-direction: row;
+        }
+    }
+}

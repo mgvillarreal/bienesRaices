@@ -1,0 +1,10 @@
+.nosotros-contenido{
+    h4{
+        margin: 0;
+    }
+
+    @include desktop{
+        @include grid(2, 2rem);
+    }
+}
+
