@@ -8,9 +8,13 @@
             </nav>
         </div>
 
-        <p class="copy-right">Todos los Derechos Reservados 2023 &copy;</p>
+        <?php 
+            $fecha = date('Y');
+        ?>
+
+        <p class="copy-right">Todos los Derechos Reservados <?php echo date('Y'); ?> &copy;</p>
     </footer>
     
-    <script src="build/js/bundle.min.js"></script>
+    <script src="/build/js/bundle.min.js"></script>
 </body>
 </html>
