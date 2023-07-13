@@ -6,17 +6,38 @@
     $errores = [];
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
-        var_dump($_POST);
-
         $email = mysqli_real_escape_string($db, filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) ;
         $pwd =  mysqli_real_escape_string($db, $_POST['pwd']);
 
         if(!$email){
-            $errores = 'El correo electrónico es obligatorio o no es válido';
+            $errores[] = 'El correo electrónico es obligatorio o no es válido';
         }
 
         if(!$pwd){
-            $errores = 'La contraseña está vacía';
+            $errores[] = 'La contraseña es obligatoria';
+        }
+
+        if(empty($errores)){
+            //Validar si el usuario existe
+            $query = "SELECT * FROM usuarios WHERE email = '$email'";
+            $resultado = mysqli_query($db, $query);
+
+            if(!$resultado->num_rows){
+                $errores[] = "El usuario no existe";
+            }else{
+                $usuario = mysqli_fetch_assoc($resultado);
+                $auth = password_verify($pwd, $usuario['password']);
+                
+                if($auth){
+                    session_start(); //Inicia la sesión
+                    $_SESSION['usuario'] = $usuario['email']; //Llenar el arreglo de la sesión
+                    $_SESSION['login'] = true;
+                    header('Location: /admin');
+                }
+                else{
+                    $errores[] = 'La contraseña es incorrecta';
+                }
+            }
         }
     }
 
@@ -39,10 +60,10 @@
                 <legend>Correo electrónico y Contraseña</legend>
 
                 <label for="email">Email</label>
-                <input type="email" placeholder="Correo electrónico" id="email" name="email" required>
+                <input type="email" placeholder="Correo electrónico" id="email" name="email">
 
                 <label for="pwd">Contraseña</label>
-                <input type="password" placeholder="Contraseña" id="pwd" name="pwd" required>
+                <input type="password" placeholder="Contraseña" id="pwd" name="pwd">
 
             </fieldset>
 

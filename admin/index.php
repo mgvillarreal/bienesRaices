@@ -1,4 +1,11 @@
 <?php
+    /* MANEJO DE SESIONES */
+    require '../includes/funciones.php';
+    $auth = autenticar();
+    if(!$auth){
+        header('Location: /');
+    }
+
     /* CONECTARSE A LA BD */
     //Importar la conexión
     require '../includes/config/database.php';
@@ -33,7 +40,6 @@
     }
 
     //Incluye un template
-    require '../includes/funciones.php';
     incluirTemplate('header');
 ?>
 

@@ -1,4 +1,12 @@
 <?php
+    /* MANEJO DE SESIONES */
+    require '../../includes/funciones.php';
+    $auth = autenticar();
+
+    if(!$auth){
+        header('Location: /');
+    }
+
     // Validar la URL por un ID válido
     $id = $_GET['id'];
     $id = filter_var($id, FILTER_VALIDATE_INT);
@@ -123,7 +131,6 @@
 
     }
     
-    require '../../includes/funciones.php';
     incluirTemplate('header');
 ?>
 
