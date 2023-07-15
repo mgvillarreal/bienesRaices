@@ -1,0 +1,17 @@
+{
+    "name": "mgvil/bienesraices",
+    "description": "Proyecto con POO",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Maria Gabriela",
+            "email": "mgvillarreal09@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4":{
+            "App\\": "./clases"
+        }
+    }
+}

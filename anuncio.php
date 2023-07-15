@@ -1,4 +1,6 @@
 <?php
+    require './includes/app.php';
+
     $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
 
     if(!$id){
@@ -6,7 +8,6 @@
     }
 
     /* CONECTARSE A LA BD */
-    require './includes/config/database.php';
     $db = conectarDB();
     $query = "SELECT * FROM propiedades WHERE id = $id";
     $resultado = mysqli_query($db, $query);
@@ -17,7 +18,7 @@
 
     $propiedad = mysqli_fetch_assoc($resultado);
 
-    require './includes/funciones.php';
+    
     incluirTemplate('header');
 ?>
 

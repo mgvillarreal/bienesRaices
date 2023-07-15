@@ -1,7 +1,7 @@
 <?php
 
 /* CONECTARSE A LA BD */
-require './includes/config/database.php';
+require './includes/config/app.php';
 $db = conectarDB();
 
 $email = 'admin@mail.com';
