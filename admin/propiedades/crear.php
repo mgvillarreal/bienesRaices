@@ -3,6 +3,7 @@
     require '../../includes/app.php';
 
     use App\Propiedad;
+    use Intervention\Image\ImageManagerStatic as Image;
    
     autenticar();
 
@@ -12,8 +13,7 @@
     $consulta = "SELECT * FROM vendedores";
     $resultado = mysqli_query($db, $consulta);
 
-    // Arreglo con mensajes de errores
-    $errores = [];
+    $errores = Propiedad::getErrores(); //Arreglo con mensajes de errores
 
     $titulo = '';
     $precio = '';
@@ -23,83 +23,31 @@
     $estacionamiento = '';
     $vendedor = '';
 
-    // Se ejecuta después de que el usuario envía el formulario
-    if($_SERVER['REQUEST_METHOD'] === 'POST'){
-        $titulo = mysqli_real_escape_string( $db, $_POST['titulo'] );
-        $precio = mysqli_real_escape_string( $db, $_POST['precio'] );
-        $descripcion = mysqli_real_escape_string( $db, $_POST['descripcion'] );
-        $habitaciones = mysqli_real_escape_string( $db, $_POST['habitaciones'] );
-        $wc = mysqli_real_escape_string( $db, $_POST['wc'] );
-        $estacionamiento = mysqli_real_escape_string( $db, $_POST['estacionamiento'] );
-        $vendedor = mysqli_real_escape_string( $db, $_POST['vendedor'] );
-        $creado = date('Y/m/d');
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){ //Se ejecuta después de que el usuario envía el formulario
+        $propiedad = new Propiedad($_POST);
 
-        //Asignar files hacia una variable
-        $imagen = $_FILES['imagen'];
+        /* Subida de Archivos */
+        $nombreImagen = md5( uniqid( rand(), true ) ) . ".jpg"; //Generar nombre único
 
-        if(!$titulo){
-            $errores[] = "Debe añadir un título";
-        }
-
-        if(!$precio){
-            $errores[] = "El precio es obligatorio";
-        }
-
-        if(strlen($descripcion)<50){
-            $errores[] = "La descripción es obligatoria y debe tener al menos 50 caracteres";
-        }
-
-        if(!$habitaciones){
-            $errores[] = "La cantidad de habitaciones es obligatoria";
-        }
-
-        if(!$wc){
-            $errores[] = "La cantidad de wc es obligatoria";
-        }
-
-        if(!$estacionamiento){
-            $errores[] = "La cantidad de estacionamientos es obligatoria";
-        }
-
-        if(!$vendedor){
-            $errores[] = "Debes añadir un vendedor";
-        }
-
-        if(!$imagen['name'] || $imagen['error']){
-            $errores[] = "La imagen es obligatoria";
-        }
-
-        //Validar por tamaño (1MB máximo)
-        $medida = 1000 * 1000;
-
-        if($imagen['size'] > $medida){
-            $errores[] = "La imagen es muy pesada";
+        if($_FILES['imagen']['tmp_name']){
+            $image = Image::make($_FILES['imagen']['tmp_name'])->fit(800,600); //Realizar resize a la imagen con intervention
+            $propiedad->setImagen($nombreImagen); //Setear el nombre de la imagen generado para la BD
         }
         
+        /* Validar errores */
+        $errores = $propiedad->validar();
+
         if(empty($errores)){
-            // Subida de Archivos
-
-            //Crear una carpeta
-            $carpetaImagenes = '../../imagenes/';
-
-            if(!is_dir($carpetaImagenes)){
-                mkdir($carpetaImagenes);
+            if(!is_dir(CARPETA_IMAGENES)){ //Crear una carpeta
+                mkdir(CARPETA_IMAGENES);
             }
+            
+            $image->save(CARPETA_IMAGENES . $nombreImagen); //Guarda la imagen en el servidor
 
-            //Generar nombre único
-            $nombreImagen = md5( uniqid( rand(), true ) ) . ".jpg";
-
-            //Subir imagen
-            move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
-
-            //Insertar en la base de datos
-            $query = "INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedores_id) VALUES ('$titulo', '$precio', '$nombreImagen', '$descripcion','$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedor')";
-        
-            $resultado = mysqli_query($db, $query);
+            $resultado = $propiedad->guardar(); //Guarda en la base de datos
 
             if($resultado){
-                //Redireccionar el usuario
-                header('Location: /admin?resultado=1');
+                header('Location: /admin?resultado=1'); //Redireccionar al usuario
             }
         }
 
