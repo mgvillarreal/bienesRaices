@@ -1,5 +1,4 @@
 <?php
-    /* MANEJO DE SESIONES */
     require '../../includes/app.php';
 
     use App\Propiedad;
