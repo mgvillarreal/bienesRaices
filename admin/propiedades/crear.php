@@ -18,13 +18,13 @@
     $errores = Propiedad::getErrores(); //Arreglo con mensajes de errores
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){ //Se ejecuta después de que el usuario envía el formulario
-        $propiedad = new Propiedad($_POST);
+        $propiedad = new Propiedad($_POST['propiedad']);
 
         /* Subida de Archivos */
         $nombreImagen = md5( uniqid( rand(), true ) ) . ".jpg"; //Generar nombre único
 
-        if($_FILES['imagen']['tmp_name']){
-            $image = Image::make($_FILES['imagen']['tmp_name'])->fit(800,600); //Realizar resize a la imagen con intervention
+        if($_FILES['propiedad']['tmp_name']['imagen']){
+            $image = Image::make($_FILES['propiedad']['tmp_name']['imagen'])->fit(800,600); //Realizar resize a la imagen con intervention
             $propiedad->setImagen($nombreImagen); //Setear el nombre de la imagen generado para la BD
         }
         
