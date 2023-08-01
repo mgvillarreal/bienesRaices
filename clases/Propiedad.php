@@ -24,7 +24,7 @@ class Propiedad{
 
     public function __construct($args = [])
     {
-        $this->id = $args['id'] ?? '';
+        $this->id = $args['id'] ?? null;
         $this->titulo = $args['titulo'] ?? '';
         $this->precio = $args['precio'] ?? '';
         $this->imagen = $args['imagen'] ?? '';
@@ -50,7 +50,9 @@ class Propiedad{
         $query .= "')";
         $resultado = self::$db->query($query);
 
-        return $resultado;
+        if($resultado){
+            header('Location: /admin?resultado=1');
+        }
     }
 
     public function actualizar(){
@@ -74,11 +76,21 @@ class Propiedad{
     }
 
     public function guardar(){
-        if(isset($this->id)){
+        if(!is_null($this->id)){
             $this->actualizar();
         }
         else{
             $this->crear();
+        }
+    }
+
+    public function eliminar(){
+        $query = "DELETE FROM propiedades WHERE id = '" . self::$db->escape_string($this->id) . "' LIMIT 1";
+        $resultado = self::$db->query($query);
+
+        if($resultado){
+            $this->borrarImagen();
+            header('Location: /admin?resultado=3');
         }
     }
 
@@ -105,16 +117,19 @@ class Propiedad{
     }
 
     public function setImagen($imagen){
-        // Elimina imagen previa
-        if(isset($this->id)){
-            $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
-            if($existeArchivo){
-                unlink(CARPETA_IMAGENES . $this->imagen);
-            }
+        if(!is_null($this->id)){
+            $this->borrarImagen();
         }
 
         if($imagen){
             $this->imagen = $imagen;
+        }
+    }
+
+    public function borrarImagen(){
+        $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
+        if($existeArchivo){
+            unlink(CARPETA_IMAGENES . $this->imagen);
         }
     }
 

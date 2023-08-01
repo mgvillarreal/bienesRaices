@@ -28,7 +28,6 @@
             $propiedad->setImagen($nombreImagen); //Setear el nombre de la imagen generado para la BD
         }
         
-        /* Validar errores */
         $errores = $propiedad->validar();
 
         if(empty($errores)){
@@ -38,11 +37,7 @@
             
             $image->save(CARPETA_IMAGENES . $nombreImagen); //Guarda la imagen en el servidor
 
-            $resultado = $propiedad->guardar(); //Guarda en la base de datos
-
-            if($resultado){
-                header('Location: /admin?resultado=1'); //Redireccionar al usuario
-            }
+            $propiedad->guardar(); //Guarda en la base de datos
         }
 
     }
