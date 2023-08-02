@@ -1,6 +1,6 @@
 <?php
-
     use App\Propiedad;
+    use App\Vendedor;
     use Intervention\Image\ImageManagerStatic as Image;
 
     require '../../includes/app.php';
@@ -14,10 +14,7 @@
     }
 
     $propiedad = Propiedad::find($id); //Consultar datos de la propiedad
-
-    //Consultar para obtener vendedores
-    // $consulta = "SELECT * FROM vendedores";
-    // $resultado = mysqli_query($db, $consulta);
+    $vendedores = Vendedor::all();
 
     $errores = Propiedad::getErrores(); // Arreglo con mensajes de errores
 
@@ -41,7 +38,6 @@
 
             $propiedad->guardar();
         }
-
     }
     
     incluirTemplate('header');
