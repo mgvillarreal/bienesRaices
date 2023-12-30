@@ -1,10 +1,10 @@
 # Real Estate Proyect
 
 <p align="left">
-   <img src="https://img.shields.io/badge/STATUS-ONGOING-orange">
+   <img src="https://img.shields.io/badge/STATUS-DONE-green">
 </p>
 
-This is a repository for a Real Estate Website. The main goal of the site is to showcase my abilities using HTML, SASS, PHP and JavaScript and to improve practices to make a responsive site. Also to start my first steps using a relational data base.
+This is a repository for a Real Estate Website. The main goal of the site is to showcase my abilities using HTML, SASS, PHP and JavaScript and to improve practices to make a responsive site. Also to start my first steps using a relational data base and OOP as programming paradigm.
 
 ### Technologies Used
 This website was built using HTML, SASS and JavaScript for frontend and PHP and SQL for backend.
